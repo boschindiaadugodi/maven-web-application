@@ -1,0 +1,65 @@
+pipeline{
+agent any
+triggers
+{
+pollSCM('* * * * *')
+//pipelineTriggers('githubPush')
+}
+options{
+timestamps()
+buildDiscarder(logRotator(artifactDaysToKeepStr: '6', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '6'))
+}
+
+tools
+{
+maven "maven3.8.1"
+}
+stages{
+stage('CheckOutCode'){
+steps
+{
+git branch: 'development', credentialsId: '5d152130-d4ac-4672-804e-90bf4ab5e67e', url: 'https://github.com/boschindiaadugodi/maven-web-application.git'
+}
+}
+stage('Build'){
+steps{
+sh "mvn clean package"
+}
+}
+stage('SonarQubeReport')
+{
+steps{
+sh "mvn clean sonar:sonar"
+}
+}
+stage('Nexus'){
+steps{
+sh "mvn clean deploy"
+}
+}
+stage('Tomcat'){
+steps{
+sshagent(['8ac1d839-04c9-4194-9b52-8b3c33dbb66a'])
+{
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war/ ec2-user@65.2.31.121:/opt/apache-tomcat-9.0.46/webapps/"
+}
+}
+}
+}//stages closing
+post{
+
+success{
+emailext body: '''Build is Over-Success!!
+
+Regards
+Jenkins Team.''', subject: 'Build is Over!!', to: 'aradhanareddydevops@gmail.com'
+}
+failure{
+emailext body: '''Build is Over-Fail!!
+
+Regards
+Jenkins Team.''', subject: 'Build is Over!!', to: 'aradhanareddydevops@gmail.com'
+}
+}
+
+}//pipeline closing

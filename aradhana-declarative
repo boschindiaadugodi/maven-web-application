@@ -9,11 +9,12 @@ options{
 timestamps()
 buildDiscarder(logRotator(artifactDaysToKeepStr: '6', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '6'))
 }
-
+/*
 tools
 {
 maven "maven3.8.1"
 }
+*/
 stages{
 stage('CheckOutCode'){
 steps

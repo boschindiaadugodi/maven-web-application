@@ -7,6 +7,7 @@ git branch: 'development', credentialsId: '5d152130-d4ac-4672-804e-90bf4ab5e67e'
 stage('Build'){
 sh "${mavenHome}/bin/mvn clean package"
 }
+/*
 stage('SonarQubeReportGen')
 {
 sh "${mavenHome}/bin/mvn sonar:sonar"
@@ -28,5 +29,6 @@ emailext body: '''Build is Over!
 Regards
 Jenkins Team''', subject: 'Build is Over!', to: 'aradhanareddydevops@gmail.com'
 }
+*/
 }
 }

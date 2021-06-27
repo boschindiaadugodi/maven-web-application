@@ -29,6 +29,6 @@ emailext body: '''Build is Over!
 Regards
 Jenkins Team''', subject: 'Build is Over!', to: 'aradhanareddydevops@gmail.com'
 }
-*/
 }
+*/
 }
